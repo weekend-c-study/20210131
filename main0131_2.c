@@ -1,4 +1,250 @@
 #include<stdio.h>
+int main()
+{
+	FILE* fis=NULL;
+	FILE* fos=NULL;
+
+	fopen_s(&fis, "img_1.jpg", "rb");
+	char buffer[1024];
+	fread_s(buffer, sizeof(buffer),sizeof(char), 1024, fis);
+
+
+	fclose(fis);
+
+	return 0;
+}
+
+/*
+#include<stdio.h>
+int main()
+{
+	FILE* fos=NULL;
+	fopen_s(&fos, "test02.txt", "wt");
+	if(fos != NULL)
+	{
+		fputc('A', fos);//문자 한글자저장
+		fputs("Hello!\n", fos);//문자열 저장
+		fputs("Fun C programming\n", fos);
+
+		fclose(fos);
+	}
+	return 0;
+}
+//*/
+
+/*
+#include<stdio.h>
+
+int main()
+{
+	FILE* fis=NULL;
+	//파일에서 데이터를 읽기위한 스트림 형성
+	fopen_s(&fis, "test01.txt","rt");
+	if (fis != NULL) {
+		int readData;
+		while ((readData = fgetc(fis)) != EOF) {
+
+			//fgetc파일에서 더이상  읽어들일 문자자 존재하지 않을때
+			//파일의마직일때 EOF(-1) 리턴한다.
+			
+			printf("%c", readData);
+		}
+		
+		
+		fclose(fis);
+	}
+	else {//파일명일 존재하지 않을때 실행된다.
+		puts("파일이 존재하지 않습니다.");
+	}
+	return 0;
+}
+//*/
+
+/*
+//파일의 입출력
+//파일 : 텍스트파일(메모장,한글,엑셀), 바이너리파일(음원,영상,그림)
+#include<stdio.h>
+int main()
+{
+	//파일에 데이터 저장하기 위한 스트림
+	//FILE* file=fopen("test01.txt","wt");
+	FILE* file=NULL;
+	fopen_s(&file,"test01.txt", "wt");
+	//w 모드인경우 파일이 존재하지 않으면 자동으로 파일을 생성시켜줍니다.
+	puts("파일열기!");
+	if (file != NULL)
+	{
+		fputc('a', file);
+		fputc('b', file);
+		fputc('c', file);
+
+		//종료
+		fclose(file);
+		puts("파일닫기!");
+	}
+	else {
+		puts("파일이 존재하지 안습니다.");
+	}
+
+	return 0;
+}
+//*/
+
+/*
+//열거형(Enumerated type)
+#include<stdio.h>
+//둘이상의 연관이 있는 이름을 상수로 선언함으로써
+//프로그램의 가독성을 높이는데 있다.
+typedef enum
+{
+	//열거형 상수
+	//0~ int형으로 표현되는 상수
+	Do=1, Re,Mi,Fa,So,La,Ti
+}Syllable;
+typedef enum
+{
+	Red=10,Green=20,Blue=30
+}Color;
+void sound(Syllable tone)
+{
+	switch(tone)
+	{
+	case Do:
+		puts("도"); break;
+	case Re:
+		puts("레"); break;
+	case Mi:
+		puts("미"); break;
+	case Fa:
+		puts("파"); break;
+	case So:
+		puts("솔"); break;
+	case La:
+		puts("라"); break;
+	case Ti:
+		puts("시"); break;
+
+	}
+
+}
+int main()
+{
+	printf("%d\n", Do);
+	printf("%d\n", Re);
+	printf("%d\n", Mi);
+	printf("%d\n", Fa);
+	printf("%d\n", So);
+	printf("%d\n", La);
+	printf("%d\n", Ti);
+	Syllable tone;
+
+	for (tone = Do; tone < Ti; tone++)
+	{
+		sound(tone);
+	}
+	
+	return 0;
+}
+//*/
+
+/*
+#include<stdio.h>
+typedef struct
+{
+	unsigned short upper;
+	unsigned short lower;
+}DBsort;
+
+typedef union
+{
+	int iBuf;
+	char bBuf[4];
+	DBsort sBuf;
+}RDBuf;
+
+int main()
+{
+	RDBuf buf;
+	printf("%d", sizeof(buf));
+
+	puts("정수 입력하세요!");
+	scanf_s("%d", &buf.iBuf);
+
+	printf("상위2byte : %u\n", buf.sBuf.upper);
+	printf("하위2byte : %u\n", buf.sBuf.lower);
+	printf("상위1byte 아스키코드 : %C\n", buf.bBuf[0]);
+	printf("하위1byte 아스키코드 : %C\n", buf.bBuf[3]);
+	return 0;
+}
+//*/
+/*
+#include<stdio.h>
+typedef union
+{
+	unsigned char rgb[4];
+	unsigned int code;
+
+}Color;
+
+//색상표현 0~255 == 00 ~ FF
+int main()
+{
+	int input;
+	Color c = { 0 };
+
+	printf("Red : ");
+	scanf_s("%d", &input);
+	c.rgb[2] = (unsigned char)input;
+
+	printf("Green : ");
+	scanf_s("%d", &input);
+	c.rgb[1] = (unsigned char)input;
+
+	printf("Blue : ");
+	scanf_s("%d", &input);
+	c.rgb[0] = (unsigned char)input;
+
+	printf("Coler code: 0x%X\n", c.code);
+
+	printf("%d\n", &c.rgb[0]);
+	printf("%d\n", &c.rgb[1]);
+	printf("%d\n", &c.rgb[2]);
+	printf("%d\n", &c.rgb[3]);
+	printf("%d\n", &c.code);
+
+
+	return 0;
+}
+//*/
+
+/*
+//공용체(Union type)
+#include<stdio.h>
+
+typedef union
+{
+	int a;
+	double b;
+}Utest;
+
+int main()
+{
+	Utest test;
+	printf("%d\n", sizeof(test));//8byte
+	printf("%p %p\n", &test.a, &test.b);
+
+	test.a = 10;
+	printf("%d\n", test.a);
+	test.b = 3.14;
+	printf("%g\n", test.b);
+	printf("%d\n", test.a);
+
+	return 0;
+}
+//*/
+
+/*
+#include<stdio.h>
 #include<string.h>
 typedef struct
 {
@@ -84,6 +330,7 @@ int main()
 
 	return 0;
 }
+//*/
 
 /*
 #include<stdio.h>
