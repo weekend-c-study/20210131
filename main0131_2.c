@@ -5,11 +5,42 @@ int main()
 	FILE* fos=NULL;
 
 	fopen_s(&fis, "img_1.jpg", "rb");
-	char buffer[1024];
-	fread_s(buffer, sizeof(buffer),sizeof(char), 1024, fis);
+	fopen_s(&fos, "img_1_copy.jpg", "wb");
 
+	//스트림이 정상적으로 오픈되지않으면 프로그램종료
+	if (fis == NULL || fos == NULL) {
+		puts("파일오픈 실패!");
+		return -1;
+	}
+	
+	char buffer[1024];
+	while (1) {
+		//입력스트림에서 데이터를 읽어서 buffer에 저장
+		int readCount = fread_s(buffer, sizeof(buffer), sizeof(char), 1024, fis);
+		printf("읽어들인데이터수 : %d\n", readCount);
+		//읽어들인 데이터(buffer)를 출력스트림을 통해서 저장
+		fwrite(buffer, sizeof(char), readCount, fos);
+
+		//feof(fis) : 파일을 끝을 확인하는방법의 목적으로 정의된 함수
+		//파일의 끝에 도달한 경우 0이 아닌 값을 반환
+		if (readCount < sizeof(buffer)) {
+			if (feof(fis) != 0)
+			{
+				puts("파일복사완료!");
+				break;
+			}
+			else {
+				puts("파일복사실패!");
+				break;
+			}
+				
+		}
+	}
+		
 
 	fclose(fis);
+	fclose(fos);
+	
 
 	return 0;
 }
